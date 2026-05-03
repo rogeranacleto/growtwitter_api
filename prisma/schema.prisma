@@ -23,13 +23,16 @@ model User {
 }
 
 model Tweet {
-    id        String   @id @default(uuid()) @db.Uuid
-    content   String   @db.VarChar(200)
-    userId    String   @map("user_id") @db.Uuid
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+    id            String   @id @default(uuid()) @db.Uuid
+    content       String   @db.VarChar(200)
+    userId        String   @map("user_id") @db.Uuid
+    parentTweetId String?  @map("parent_tweet_id") @db.Uuid
+    createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+    updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parent        Tweet?   @relation("tweet_replies", fields: [parentTweetId], references: [id], onDelete: Cascade)
+    replies       Tweet[]  @relation("tweet_replies")
 
     @@map("tweets")
 }
