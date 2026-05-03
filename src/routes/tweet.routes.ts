@@ -1,5 +1,5 @@
 import express from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { dataValidation, authMiddleware } from "../middlewares/index";
 import { makeTweetController } from "../factories/index";
 
@@ -15,9 +15,24 @@ export class TweetRoutes {
                 body("content")
                     .isString().withMessage("Conteúdo deve ser texto.")
                     .isLength({ min: 1, max: 200 })
-                    .withMessage("Conteudo deve ter entre 1 e 200 caracteres."),
+                    .withMessage("Conteúdo deve ter entre 1 e 200 caracteres."),
             ]),
             tweetController.createTweet.bind(tweetController)
+        );
+
+        router.post(
+            "/tweets/:id/reply",
+            authMiddleware,
+            dataValidation([
+                param("id")
+                    .isUUID()
+                    .withMessage("ID do tweet deve ser válido."),
+                body("content")
+                    .isString().withMessage("Conteúdo deve ser texto.")
+                    .isLength({ min: 1, max: 200 })
+                    .withMessage("Conteúdo deve ter entre 1 e 200 caracteres."),
+            ]),
+            tweetController.replyTweet.bind(tweetController)
         );
 
         return router;

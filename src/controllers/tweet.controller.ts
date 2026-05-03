@@ -21,4 +21,22 @@ export class TweetController {
             return onError(error, res);
         }
     }
+
+    public async replyTweet(req: Request, res: Response) {
+        try {
+            const { content } = req.body;
+            const parentTweetId = req.params.id as string;
+            const userId = req.user.id;
+
+            const reply = await this.tweetService.replyTweet({ content, userId, parentTweetId });
+
+            return res.status(201).json({
+                ok: true,
+                message: "Resposta criada com sucesso!",
+                data: reply
+            });
+        } catch (error) {
+            return onError(error, res)
+        }
+    }
 }
