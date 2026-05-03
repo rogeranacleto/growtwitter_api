@@ -18,7 +18,8 @@ model User {
     updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
     tweets Tweet[]
-
+    likes  Like[]
+    
     @@map("users")
 }
 
@@ -33,6 +34,19 @@ model Tweet {
     user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     parent        Tweet?   @relation("tweet_replies", fields: [parentTweetId], references: [id], onDelete: Cascade)
     replies       Tweet[]  @relation("tweet_replies")
+    likes         Like[]
 
     @@map("tweets")
+}
+
+model Like {
+    userId    String   @map("user_id") @db.Uuid
+    tweetId   String   @map("tweet_id") @db.Uuid
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+    @@id([userId, tweetId])
+    @@map("likes")
 }
