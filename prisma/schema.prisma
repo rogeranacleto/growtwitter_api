@@ -19,6 +19,8 @@ model User {
 
     tweets Tweet[]
     likes  Like[]
+    following    Follow[] @relation("user_following")
+    followers    Follow[] @relation("user_followers")
     
     @@map("users")
 }
@@ -49,4 +51,16 @@ model Like {
 
     @@id([userId, tweetId])
     @@map("likes")
+}
+
+model Follow {
+    followerId  String   @map("follower_id") @db.Uuid
+    followingId String   @map("following_id") @db.Uuid
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+    follower    User     @relation("user_following", fields: [followerId], references: [id], onDelete: Cascade)
+    following   User     @relation("user_followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+    @@id([followerId, followingId])
+    @@map("follows")
 }
