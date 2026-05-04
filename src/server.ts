@@ -3,14 +3,16 @@ import { envs } from "./envs";
 import {
   AuthRoutes,
   TweetRoutes,
-  LikeRoutes
+  LikeRoutes,
+  FollowRoutes
 } from "./routes";
 
 const app = new App(
   [
     AuthRoutes.bind(),
     TweetRoutes.bind(),
-    LikeRoutes.bind()
+    LikeRoutes.bind(),
+    FollowRoutes.bind()
   ],
   Number(envs.PORT)
 );

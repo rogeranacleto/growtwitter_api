@@ -9,7 +9,7 @@ interface CreateUserParams {
 }
 
 export class AuthRepository {
-  constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient) {}
 
   public async createUser(data: CreateUserParams) {
     return this.prisma.user.create({ data });
@@ -17,7 +17,13 @@ export class AuthRepository {
 
   public async findByEmail(email: string) {
     return this.prisma.user.findUnique({
-      where: { email }
+      where: { email },
+    });
+  }
+
+  public async findById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
     });
   }
 }
