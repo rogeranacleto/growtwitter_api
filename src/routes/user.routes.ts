@@ -2,15 +2,16 @@ import express from "express";
 import { authMiddleware, dataValidation } from "../middlewares/index";
 import { makeUserController } from "../factories/index";
 import { param } from "express-validator";
+import { JwtAdapter } from "../adapters/index";
 
 export class UserRoutes {
-    public static bind() {
+    public static bind(jwtAdapter: JwtAdapter) {
         const router = express.Router();
         const userController = makeUserController();
 
         router.get(
             "/users/:id",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()

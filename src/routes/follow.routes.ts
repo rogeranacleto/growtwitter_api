@@ -3,15 +3,16 @@ import { dataValidation } from "../middlewares";
 import { param } from "express-validator";
 import { authMiddleware } from "../middlewares/index";
 import { makeFollowController } from "../factories/index";
+import { JwtAdapter } from "../adapters/index";
 
 export class FollowRoutes {
-    public static bind() {
+    public static bind(jwtAdapter: JwtAdapter) {
         const router = express.Router();
         const followController = makeFollowController();
 
         router.post(
             "/users/:id/follow",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()
@@ -22,7 +23,7 @@ export class FollowRoutes {
 
         router.delete(
             "/users/:id/follow",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()

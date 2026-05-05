@@ -2,15 +2,16 @@ import express from "express";
 import { makeLikeController } from "../factories/index";
 import { authMiddleware, dataValidation } from "../middlewares/index";
 import { param } from "express-validator";
+import { JwtAdapter } from "../adapters/index";
 
 export class LikeRoutes {
-    public static bind() {
+    public static bind(jwtAdapter: JwtAdapter) {
         const router = express.Router();
         const likeController = makeLikeController();
 
         router.post(
             "/tweets/:id/like",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()
@@ -21,7 +22,7 @@ export class LikeRoutes {
 
         router.delete(
             "/tweets/:id/like",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()

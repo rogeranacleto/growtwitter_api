@@ -8,17 +8,20 @@ import {
   UserRoutes,
   FeedRoutes
 } from "./routes";
+import { JwtAdapter } from "./adapters/index";
+
+const jwtAdapter = new JwtAdapter();
 
 const app = new App(
   [
     AuthRoutes.bind(),
-    TweetRoutes.bind(),
-    LikeRoutes.bind(),
-    FollowRoutes.bind(),
-    UserRoutes.bind(),
-    FeedRoutes.bind()
+    TweetRoutes.bind(jwtAdapter),
+    LikeRoutes.bind(jwtAdapter),
+    FollowRoutes.bind(jwtAdapter),
+    UserRoutes.bind(jwtAdapter),
+    FeedRoutes.bind(jwtAdapter),
   ],
-  Number(envs.PORT)
+  Number(envs.PORT),
 );
 
 app.listen();

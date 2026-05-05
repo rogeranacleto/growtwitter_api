@@ -2,15 +2,16 @@ import express from "express";
 import { body, param } from "express-validator";
 import { dataValidation, authMiddleware } from "../middlewares/index";
 import { makeTweetController } from "../factories/index";
+import { JwtAdapter } from "../adapters/index";
 
 export class TweetRoutes {
-    public static bind() {
+    public static bind(jwtAdapter: JwtAdapter) {
         const router = express.Router();
         const tweetController = makeTweetController();
 
         router.post(
             "/tweets",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 body("content")
                     .isString().withMessage("Conteúdo deve ser texto.")
@@ -22,7 +23,7 @@ export class TweetRoutes {
 
         router.post(
             "/tweets/:id/reply",
-            authMiddleware,
+            authMiddleware(jwtAdapter),
             dataValidation([
                 param("id")
                     .isUUID()
