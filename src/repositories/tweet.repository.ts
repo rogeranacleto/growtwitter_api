@@ -7,22 +7,48 @@ interface CreateTweetParams {
 }
 
 export class TweetRepository {
-    constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient) {}
 
-    public async createTweet(data: CreateTweetParams) {
-        return this.prisma.tweet.create({
-          data: {
-            content: data.content,
-            userId: data.userId,
-            parentTweetId: data.parentTweetId ?? null,
+  public async createTweet(data: CreateTweetParams) {
+    return this.prisma.tweet.create({
+      data: {
+        content: data.content,
+        userId: data.userId,
+        parentTweetId: data.parentTweetId ?? null,
+      },
+    });
+  }
+
+  public async findTweetById(id: string) {
+    return this.prisma.tweet.findUnique({
+      where: { id },
+    });
+  }
+
+  public async findTweetsByUserIds(userIds: string[]) {
+    return this.prisma.tweet.findMany({
+      where: {
+        userId: {
+          in: userIds,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
           },
-        });
-    }
-
-    public async findTweetById(id: string) {
-        return this.prisma.tweet.findUnique({
-            where: { id },
-        });
-    }
-
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
+    });
+  }
 }

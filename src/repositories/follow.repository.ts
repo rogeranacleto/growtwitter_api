@@ -33,4 +33,16 @@ export class FollowRepository {
             },
         });
     }
+
+    public async findFollowingIds(userId: string) {
+        return this.prisma.follow.findMany({
+            where: {
+                followerId: userId,
+            },
+            select: {
+                followingId: true,
+            },
+        });
+
+    }
 }

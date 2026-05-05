@@ -3,3 +3,4 @@ export * from "./tweet.factory";
 export * from "./like.factory";
 export * from "./follow.factory";
 export * from "./user.factory";
+export * from "./feed.factory";
