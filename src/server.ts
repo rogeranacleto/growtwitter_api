@@ -4,7 +4,8 @@ import {
   AuthRoutes,
   TweetRoutes,
   LikeRoutes,
-  FollowRoutes
+  FollowRoutes,
+  UserRoutes
 } from "./routes";
 
 const app = new App(
@@ -12,7 +13,8 @@ const app = new App(
     AuthRoutes.bind(),
     TweetRoutes.bind(),
     LikeRoutes.bind(),
-    FollowRoutes.bind()
+    FollowRoutes.bind(),
+    UserRoutes.bind()
   ],
   Number(envs.PORT)
 );
