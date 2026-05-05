@@ -1,16 +1,16 @@
 import { FollowRepository } from "../repositories/index";
-import { AuthRepository } from "../repositories/index";
+import { UserRepository } from "../repositories/index";
 import { HTTPError } from "../utils/http.error";
 
 export class FollowService {
-    constructor(private followRepository: FollowRepository, private authRepository: AuthRepository) { }
+    constructor(private followRepository: FollowRepository, private userRepository: UserRepository) { }
 
     public async followUser(followerId: string, followingId: string) {
         if (followerId === followingId) {
             throw new HTTPError(400, "Você não pode seguir a si mesmo");
         }
 
-        const userExists = await this.authRepository.findById(followingId);
+        const userExists = await this.userRepository.findById(followingId);
 
         if (!userExists) {
             throw new HTTPError(404, "Usuário não encontrado");

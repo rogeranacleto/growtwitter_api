@@ -1,12 +1,12 @@
 import prisma from "../database/prisma";
-import { AuthRepository } from "../repositories";
-import { AuthService } from "../services";
-import { AuthController } from "../controllers";
+import { UserRepository } from "../repositories/index";
+import { AuthService } from "../services/index";
+import { AuthController } from "../controllers/index";
 
 export function makeAuthController(){
-    const authRepository = new AuthRepository(prisma);
-    const authService = new AuthService(authRepository);
+    const userRepository = new UserRepository(prisma);
+    const authService = new AuthService(userRepository);
     const authController = new AuthController(authService);
 
-    return authController
+    return authController;
 }

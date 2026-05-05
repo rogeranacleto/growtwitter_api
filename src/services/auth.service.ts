@@ -1,13 +1,13 @@
-import { AuthRepository } from "../repositories/index";
+import { UserRepository } from "../repositories/index";
 import { BcryptAdapter, JwtAdapter } from "../adapters/index";
 import { CreateUserDto, LoginUserDto } from "../dtos/index";
-import { HTTPError } from "../utils/http.error";
+import { HTTPError } from "../utils/index";
 
 export class AuthService {
-  constructor(private authRepository: AuthRepository) { }
+  constructor(private userRepository: UserRepository) { }
 
   public async register(data: CreateUserDto) {
-    const userExists = await this.authRepository.findByEmail(data.email);
+    const userExists = await this.userRepository.findByEmail(data.email);
 
     if (userExists) {
       throw new HTTPError(409, "Usuario ja existe!");
@@ -15,7 +15,7 @@ export class AuthService {
 
     const hashedPassword = await BcryptAdapter.hashPassword(data.password);
 
-    const user = await this.authRepository.createUser({
+    const user = await this.userRepository.createUser({
       ...data,
       password: hashedPassword,
     });
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   public async login(data: LoginUserDto) {
-    const user = await this.authRepository.findByEmail(data.email);
+    const user = await this.userRepository.findByEmail(data.email);
     if (!user) {
       throw new HTTPError(401, "E-mail ou senha invalidos, verifique!");
     }
